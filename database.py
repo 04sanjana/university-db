@@ -37,12 +37,20 @@ def create_table(conn):
         
         cursor.execute('''
                     CREATE TABLE IF NOT EXISTS subjects (
-                        id INTEGER PRIMARY KEY,
-                        student_id INTEGER,
-                        subject_name TEXT,
-                        FOREIGN KEY(student_id) REFERENCES students(id)
-                        )
-                    ''')
+                       id INTEGER PRIMARY KEY,
+                       subject_name TEXT UNIQUE
+                       )
+                       ''')
+
+        cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS student_subjects (
+                       student_id INTEGER,
+                       subject_id INTEGER,
+                       FOREIGN KEY(student_id) REFERENCES students(id),
+                       FOREIGN KEY(subject_id) REFERENCES subjects(id),
+                       PRIMARY KEY (student_id, subject_id)
+                       )
+                       ''')
         
         cursor.execute('''
                     CREATE TABLE IF NOT EXISTS marks (
@@ -53,7 +61,8 @@ def create_table(conn):
                         FOREIGN KEY(student_id) REFERENCES students(id),
                         FOREIGN KEY(subject_id) REFERENCES subjects(id)
                         )
-                    ''')
+                       ''')
+                    
 
         cursor.execute('''
                     CREATE TABLE IF NOT EXISTS attendance (
@@ -63,7 +72,8 @@ def create_table(conn):
                         status TEXT,
                         FOREIGN KEY(student_id) REFERENCES students(id),
                         FOREIGN KEY(subject_id) REFERENCES subjects(id)
-                    ''')
+                       )
+                       ''')
 
         conn.commit()
 
@@ -181,3 +191,65 @@ def attendance(student_id, subject_id, status):
     
     finally:
         conn.close()
+
+# * signin student
+def student_sigin(email, passwrd):
+    try:
+        conn = create_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT passwrd FROM students WHERE email = ?", (email,))
+        user = cursor.fetchone()
+        
+        if user:
+            passwrd_hash = user[0]
+            if bcrypt.checkpw(passwrd.encode('utf-8'), passwrd_hash):
+                print("Sign-in successful.")
+                return True
+            else:
+                print("Invalid email or password.")
+                return False
+        else:
+            print("Invalid email or password.")
+            return False
+            
+    except sqlite3.Error as e:
+        print(f"{e}")
+        return False
+    
+    finally:
+        conn.close()
+
+# * signin teacher
+def teacher_sigin(email, passwrd):
+    try:
+        conn = create_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT passwrd FROM teachers WHERE email = ?", (email,))
+        user = cursor.fetchone()
+        
+        if user:
+            passwrd_hash = user[0]
+            if bcrypt.checkpw(passwrd.encode('utf-8'), passwrd_hash):
+                print("Sign-in successful.")
+                return True
+            else:
+                print("Invalid email or password.")
+                return False
+        else:
+            print("Invalid email or password.")
+            return False
+            
+    except sqlite3.Error as e:
+        print(f"{e}")
+        return False
+    
+    finally:
+        conn.close()
+
+def students_list():
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, name FROM students")
+    students = cursor.fetchall()
+    conn.close()
+    return students
