@@ -129,26 +129,27 @@ def register_teachers(name, email, phone, passwrd):
     finally:
         conn.close()
 
-# adding subjects
-def subjects(student_id, subject_name):
-    conn = create_connection()
-    cursor = conn.cursor()
+# * not required
+#  adding subjects
+# def subjects(student_id, subject_name):
+#     conn = create_connection()
+#     cursor = conn.cursor()
 
-    try:
-        cursor.execute("""
-            INSERT INTO subjects (student_id, subject_name) 
-            VALUES (?, ?)
-        """, (student_id, subject_name))
+#     try:
+#         cursor.execute("""
+#             INSERT INTO subjects (student_id, subject_name) 
+#             VALUES (?, ?)
+#         """, (student_id, subject_name))
 
-        conn.commit()
-        return True
+#         conn.commit()
+#         return True
     
-    except sqlite3.Error as e:
-        print(f"{e}")
-        return False
+#     except sqlite3.Error as e:
+#         print(f"{e}")
+#         return False
     
-    finally:
-        conn.close()
+#     finally:
+#         conn.close()
 
 # adding marks
 def marks(student_id, subject_id, marks):
@@ -157,9 +158,20 @@ def marks(student_id, subject_id, marks):
 
     try:
         cursor.execute("""
-            INSERT INTO marks (student_id, subject_id, marks) 
-            VALUES (?, ?, ?)
-        """, (student_id, subject_id, marks))
+            SELECT id FROM marks WHERE student_id = ? AND subject_id = ?
+        """, (student_id, subject_id))
+        existing_mark = cursor.fetchone()
+
+        if existing_mark:
+            cursor.execute("""
+                UPDATE marks SET marks = ? WHERE id = ?
+            """, (marks, existing_mark[0]))
+        
+        else:
+            cursor.execute("""
+                INSERT INTO marks (student_id, subject_id, marks) 
+                VALUES (?, ?, ?)
+            """, (student_id, subject_id, marks))
 
         conn.commit()
         return True
@@ -178,17 +190,27 @@ def attendance(student_id, subject_id, status):
 
     try:
         cursor.execute("""
-            INSERT INTO attendance (student_id, subject_id, status) 
-            VALUES (?, ?, ?, ?)
-        """, (student_id, subject_id, status))
+            SELECT id FROM attendance WHERE student_id = ? AND subject_id = ?
+        """, (student_id, subject_id))
+        existing_attendance = cursor.fetchone()
+
+        if existing_attendance:
+            cursor.execute("""
+                UPDATE attendance SET status = ? WHERE id = ?
+            """, (status, existing_attendance[0]))
+        else:
+            cursor.execute("""
+                INSERT INTO attendance (student_id, subject_id, status) 
+                VALUES (?, ?, ?)
+            """, (student_id, subject_id, status))
 
         conn.commit()
         return True
-    
+
     except sqlite3.Error as e:
         print(f"{e}")
         return False
-    
+
     finally:
         conn.close()
 
@@ -253,3 +275,31 @@ def students_list():
     students = cursor.fetchall()
     conn.close()
     return students
+
+def subject_list():
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, subject_name FROM subjects")
+    subjects = cursor.fetchall()
+    conn.close()
+    return subjects
+
+# delete subject from database
+def delete_subject(subject_id):
+    conn = create_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("DELETE FROM student_subjects WHERE subject_id = ?", (subject_id,))
+        cursor.execute("DELETE FROM subjects WHERE id = ?", (subject_id,))
+        cursor.execute("DELETE FROM marks WHERE subject_id = ?", (subject_id,))
+        cursor.execute("DELETE FROM attendance WHERE subject_id = ?", (subject_id,))
+        conn.commit()
+        return True
+
+    except sqlite3.Error as e:
+        print(f"{e}")
+        return False
+
+    finally:
+        conn.close()
