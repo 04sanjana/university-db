@@ -1,5 +1,5 @@
 from flask import Flask, redirect, request, jsonify, render_template, session, url_for
-from database import attendance, create_connection, create_table, marks, register_students,  register_teachers, student_sigin, students_list, subjects, teacher_sigin
+from database import attendance, create_connection, create_table, delete_subject, marks, register_students,  register_teachers, student_sigin, students_list, subject_list, teacher_sigin
 
 app = Flask(__name__)
 
@@ -26,7 +26,6 @@ def register_student():
         password = request.form['password']
         
         if register_students(name, email, batch, phone, password):
-            # return jsonify({"message": "Student registered successfully."}), 200
             return render_template('index.html')
         
         else:
@@ -44,7 +43,6 @@ def register_teacher():
         password = request.form['password']
         
         if register_teachers(name, email, phone, password):
-            # return jsonify({"message": "Teacher registered successfully."}), 200
             return render_template('index.html')
         
         else:
@@ -90,7 +88,6 @@ def student_dashboard():
     if 'email' in session:
         email = session['email']
 
-        # Get student ID based on email
         conn = create_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT id FROM students WHERE email = ?", (email,))
@@ -101,7 +98,6 @@ def student_dashboard():
 
         student_id = student[0]
 
-        # Fetch subjects, marks, and attendance for the student
         cursor.execute("""
             SELECT s.subject_name, m.marks, a.status
             FROM subjects s
@@ -123,10 +119,11 @@ def student_dashboard():
 def teacher_dashboard():
     if 'email' in session:
         students = students_list()
-        return render_template('dashboard_teacher.html', email=session['email'], students= students)
+        subjects = subject_list()
+        return render_template('dashboard_teacher.html', email=session['email'], students= students, subjects = subjects)
     return redirect(url_for('signin_teacher'))
 
-# TODO ee function database ilek aakanam render veenda
+# TODO ee function database ilek aakanam flask render veenda
 # students data teachers dashboard il kanikunu
 # @app.route('/students')
 # def students():
@@ -143,21 +140,17 @@ def add_subject():
     if request.method == 'POST':
         subject_name = request.form['subject_name']
 
-        # Check if the subject already exists
         conn = create_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT id FROM subjects WHERE subject_name = ?", (subject_name,))
         existing_subject = cursor.fetchone()
 
         if existing_subject:
-            # Subject already exists, handle as needed (e.g., redirect with a message)
             return redirect(url_for('teacher_dashboard', message="Subject already exists."))
 
-        # Add the subject to the subjects table
         cursor.execute("INSERT INTO subjects (subject_name) VALUES (?)", (subject_name,))
-        subject_id = cursor.lastrowid  # Get the id of the newly created subject
+        subject_id = cursor.lastrowid 
 
-        # Associate this subject with all students
         cursor.execute("SELECT id FROM students")
         students = cursor.fetchall()
 
@@ -167,37 +160,38 @@ def add_subject():
         conn.commit()
         conn.close()
 
-        return redirect(url_for('dashboard_teacher'))
+        return redirect(url_for('teacher_dashboard'))
 
 
-
-@app.route('/subject', methods=['GET', 'POST'])
-def subject():
-    if request.method == 'POST':
-        student_id = request.form['student_id']
-        subject_name = request.form['subject_name']
+# * rewritten the below function above
+# @app.route('/subject', methods=['GET', 'POST'])
+# def subject():
+#     if request.method == 'POST':
+#         student_id = request.form['student_id']
+#         subject_name = request.form['subject_name']
         
-        if subjects(student_id, subject_name):
-            return jsonify({"message": "Subject added successfully."}), 200
-        else:
-            return jsonify({"error": "Failed to add subject."}), 400
+#         if subjects(student_id, subject_name):
+#             return jsonify({"message": "Subject added successfully."}), 200
+#         else:
+#             return jsonify({"error": "Failed to add subject."}), 400
     
-    return render_template('subject.html')
+#     return render_template('subject.html')
 
 @app.route('/student/<int:student_id>', methods=['GET', 'POST'])
 def student_actions(student_id):
     if request.method == 'POST':
-        if 'marks' in request.form:
+        if 'add_marks' in request.form:
             subject_id = request.form['subject_id']
             marks_value = request.form['marks']
+            # print(student_id, subject_id, marks_value)
             marks(student_id, subject_id, marks_value)
             
-        elif 'attendance' in request.form:
+        elif 'add_attendance' in request.form:
             subject_id = request.form['subject_id']
-            status = request.form['status']
+            status = request.form['attendance']
+            print(student_id, subject_id, status)
             attendance(student_id, subject_id, status)
 
-    # Fetch the subjects associated with the student
     conn = create_connection()
     cursor = conn.cursor()
     cursor.execute("""
@@ -209,6 +203,14 @@ def student_actions(student_id):
     conn.close()
 
     return render_template('student_actions.html', student_id=student_id, subjects=student_subjects)
+
+@app.route('/delete_subject/<int:subject_id>', methods=['POST'])
+def del_subject(subject_id):
+    if delete_subject(subject_id):
+        return redirect(url_for('teacher_dashboard'))
+    else:
+        return redirect(url_for('teacher_dashboard', message='Error deleting subject.'))
+
 
 
 if __name__ == '__main__':
