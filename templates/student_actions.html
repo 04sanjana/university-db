@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNN</title>
+</head>
+<body>
+    <h1>Actions for Student ID: {{ student_id }}</h1>
+
+    <h2>Add Marks and Attendance</h2>
+    <h3>Subjects</h3>
+    <ul>
+        {% for subject in subjects %}
+            <li>
+                {{ subject[1] }}
+                <h4>Add Marks</h4>
+                <form method="POST">
+                    <input type="hidden" name="add_marks" value="1">
+                    <input type="hidden" name="subject_id" value="{{ subject[0] }}">
+                    <label for="marks">Marks:</label>
+                    <input type="number" name="marks" required>
+                    <button type="submit">Add Marks</button>
+                </form>
+                <h4>Record Attendance</h4>
+                <form method="POST">
+                    <input type="hidden" name="add_attendance" value="1">
+                    <input type="hidden" name="subject_id" value="{{ subject[0] }}">
+                    <label for="attendance">Attendance:</label>
+                    <input type="text" name="attendance" required>
+                    <button type="submit">Add Attendance</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('teacher_dashboard') }}">Dashboard</a>
+</body>
+</html>

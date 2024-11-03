@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNN</title>
+</head>
+<body>
+    <h1>Teachers Dashboard</h1>
+
+    {% if request.args.get('message') %}
+        <p>{{ request.args.get('message') }}</p>
+    {% endif %}
+
+    <h2>Add Subject</h2>
+    <form action="/add_subject" method="POST">
+        <label for="subject_name">Subject Name:</label>
+        <input type="text" id="subject_name" name="subject_name" required>
+        <button type="submit">Add Subject</button>
+    </form>
+
+    <h2>Subjects</h2>
+    <ul>
+        {% for subject in subjects %}
+            <li>
+                {{ subject[1] }} 
+                <form action="{{ url_for('del_subject', subject_id=subject[0]) }}" method="POST" style="display:inline;">
+                    <button type="submit" onclick="return confirm('Click on Delete to Confirm');">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+
+    <h2>Students</h2>
+    <ul>
+        {% for student in students %}
+            <li>
+                <a href="{{ url_for('student_actions', student_id=student[0]) }}">{{ student[1] }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('index') }}">Home</a>
+</body>
+</html>

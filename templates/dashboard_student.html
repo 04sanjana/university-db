@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNN</title>
+</head>
+<body>
+    <h1>Student Dashboard</h1>
+    <h2>Details</h2>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Subject Name</th>
+                <th>Marks</th>
+                <th>Attendance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject, marks, attendance in results %}
+                <tr>
+                    <td>{{ subject }}</td>
+                    <td>{{ marks if marks is not none else 'N/A' }}</td>
+                    <td>{{ attendance if attendance is not none else 'N/A' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="{{ url_for('index') }}">Home</a>
+</body>
+</html>
