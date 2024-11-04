@@ -163,19 +163,7 @@ def add_subject():
         return redirect(url_for('teacher_dashboard'))
 
 
-# * rewritten the below function above
-# @app.route('/subject', methods=['GET', 'POST'])
-# def subject():
-#     if request.method == 'POST':
-#         student_id = request.form['student_id']
-#         subject_name = request.form['subject_name']
-        
-#         if subjects(student_id, subject_name):
-#             return jsonify({"message": "Subject added successfully."}), 200
-#         else:
-#             return jsonify({"error": "Failed to add subject."}), 400
-    
-#     return render_template('subject.html')
+
 
 @app.route('/student/<int:student_id>', methods=['GET', 'POST'])
 def student_actions(student_id):
@@ -189,7 +177,7 @@ def student_actions(student_id):
         elif 'add_attendance' in request.form:
             subject_id = request.form['subject_id']
             status = request.form['attendance']
-            print(student_id, subject_id, status)
+           # print(student_id, subject_id, status)
             attendance(student_id, subject_id, status)
 
     conn = create_connection()

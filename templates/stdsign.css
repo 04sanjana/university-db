@@ -1,0 +1,78 @@
+/* Reset and Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Container Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Heading Styles */
+h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+/* Label and Input Styles */
+label {
+    font-weight: bold;
+    margin: 15px 0 5px;
+    align-self: flex-start;
+    color: #555;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Button Styles */
+button {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #4a628a;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

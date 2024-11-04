@@ -1,0 +1,78 @@
+/* Reset and Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: Arial, sans-serif;
+    color: #4a628a;
+    background-color: #f4f4f9;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Container Styles */
+.container_id {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px; /* Reduced max-width for better readability on large screens */
+    padding: 30px 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+}
+
+.container_id:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Heading Styles */
+h1 {
+    font-size: 2rem; /* Responsive font size */
+    color: #333;
+    margin-bottom: 25px;
+}
+
+/* Link Button Styles */
+a {
+    display: inline-block;
+    width: 100%;
+    max-width: 400px; /* Set a max-width to prevent overly wide buttons */
+    margin: 8px 0;
+    padding: 12px 0;
+    font-size: 18px;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    background-color: #007bff;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+a:hover {
+    background-color: #0056b3;
+    transform: scale(1.02);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+    .container_id {
+        padding: 20px 15px;
+    }
+    a {
+        font-size: 16px;
+        padding: 10px 0;
+    }
+}

@@ -2,3 +2,4 @@ database.db3
 __pycache__
 database
 backup
+env

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SNN</title>
+    <link rel="stylesheet" href="dash.css">
 </head>
 <body>
     <h1>Student Dashboard</h1>
@@ -18,13 +19,9 @@
             </tr>
         </thead>
         <tbody>
-            {% for subject, marks, attendance in results %}
-                <tr>
-                    <td>{{ subject }}</td>
-                    <td>{{ marks if marks is not none else 'N/A' }}</td>
-                    <td>{{ attendance if attendance is not none else 'N/A' }}</td>
-                </tr>
-            {% endfor %}
+            
+                
+            
         </tbody>
     </table>
     

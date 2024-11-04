@@ -1,0 +1,65 @@
+/* Reset and Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f4f4f9;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Container Styles */
+.container_id {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 1200px; /* Increased max-width */
+    min-height: 80vh;   /* Set minimum height */
+    padding: 40px 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+}
+
+.container_id:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Heading Styles */
+h1 {
+    font-size: 36px; /* Slightly larger font for heading */
+    color: #333;
+    margin-bottom: 25px;
+}
+
+/* Link Button Styles */
+a {
+    display: inline-block;
+    width: 100%;
+    max-width: 250px; /* More manageable max-width for buttons */
+    margin: 10px 0;
+    padding: 12px 0;
+    font-size: 18px;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    background-color: #007bff;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+a:hover {
+    background-color: #0056b3;
+    transform: scale(1.02);
+}
